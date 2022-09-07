@@ -1,68 +1,76 @@
-require("dotenv").config();
-const Joi = require("joi");
-const express = require("express");
-const models = require("./models");
+require('dotenv').config();
+const Joi = require('joi');
+const config = require('config');
+const middlewares = require('./models/middlewares');
+const express = require('express');
+const models = require('./models/models');
 
 const app = express();
+
 app.use(express.json());
+app.use(express.urlencoded({ extended: true })); //key=value1&key=value2
+app.use(express.static('public'));
 
-let lessons = models.CoursService.createCourses(
-  "math",
-  "physics",
-  "svt",
-  "dev",
-  "sql",
-  "Python"
-);
+app.use(middlewares.logger);
+app.use(middlewares.authenticater);
 
-function validateCourse(course) {
-  const schema = Joi.object({ name: Joi.string().min(3).required() });
-  return schema.valid(course, schema);
-}
+const coursService = new models.CoursService();
 
-app.get("/", (req, res) => {
-  res.send("Hello Guys!!");
+// Logging
+console.log(config.get("name"))
+console.log(config.get("mail.host"))
+console.log(config.get("mail.password"))
+
+// Dto
+const courseCreateDto = Joi.object({
+  name: Joi.string().min(3).required(),
 });
 
-app.get("/api/courses", (req, res) => {
-  res.send(models.CoursService.lessons);
+app.get('/', (req, res) => {
+  res.send('Hello Guys!!');
 });
 
-app.get("/api/courses/:id", (req, res) => {
-  let cours = models.CoursService.findCourseById(parseInt(req.params.id));
+app.get('/api/courses', (req, res) => {
+  res.send(coursService.findAllCourses());
+});
 
-  if (!cours) return res.status(404).send("Not found!!");
+app.get('/api/courses/:id', (req, res) => {
+  let cours = coursService.findCourse(parseInt(req.params.id));
+
+  if (!cours) return res.status(404).send('Not found!!');
   res.send(cours);
 });
 
-app.post("/api/courses", (req, res) => {
-  // const { error } = validateCourse(req.body);
-  console.log("validation");
-  console.log(validateCourse(req.body));
+app.post('/api/courses', async (req, res) => {
+  const { error, value } = await courseCreateDto.validate(req.body);
 
-  if (error) return res.status(400).send(error);
+  if (error) return res.status(400).send(error.details);
 
-  const cours = models.CoursService.createNewCourse(req.body.name);
-  lessons.push(cours);
+  const cours = coursService.createNewCourse(value.name);
+  coursService.addNewLesson(cours);
   res.send(cours);
 });
 
-app.put("/api/courses/:id", (req, res) => {
+app.put('/api/courses/:id', (req, res) => {
   // Check existing cours
-  let cours = models.CoursService.findCourseById(Number.parseInt(req.params.id));
-  if (!cours) return res.status(404).send("Not found");
+  let cours = coursService.findCourse(Number.parseInt(req.params.id));
+  if (!cours) return res.status(404).send('Not found');
 
   // Validaton
-  const { error } = validateCourse(req.body);
-  if (error) return res.status(400).send(error);
+  const { error, value } = courseCreateDto.validate(req.body);
+  if (error) return res.status(400).send(error.details);
+
   // Update
+  const course = value
+  res.send(course)
 });
 
-app.delete("/api/courses/:id", (req, res) => {
-  let cours = models.CoursService.findCourseById(parseInt(req.params.id));
+app.delete('/api/courses/:id', (req, res) => {
+  let cours = coursService.findCourse(parseInt(req.params.id));
 
-  if (!cours) return res.status(404).send("Not found!!");
-  models.CoursService.deleteLesson(cours)
+  if (!cours) return res.status(404).send('Not found!!');
+
+  coursService.deleteLesson(cours);
   res.send(cours);
 });
 

@@ -1,0 +1,7 @@
+{
+    "name":"express app def",
+    "mail":{
+        "host":"dev-mail-host",
+        "password":"APP_PASSWORD"
+    }
+}
