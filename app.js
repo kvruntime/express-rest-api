@@ -3,7 +3,6 @@ const Joi = require("joi");
 const express = require("express");
 const models = require("./models");
 
-
 const app = express();
 app.use(express.json());
 
@@ -35,8 +34,11 @@ app.get("/api/courses/:id", (req, res) => {
 });
 
 app.post("/api/courses", (req, res) => {
-  if (!req.body.name || req.body.name.lenght < 3) {
-    res.status(400).send("Name required");
+  const schema = Joi.object({ name: Joi.string().min(3).required() });
+  const validation = schema.validate(req.body, schema);
+
+  if (validation.error) {
+    res.status(400).send(validation.error.name);
   }
 
   const cours = models.CoursService.createNewCourse(req.body.name);
