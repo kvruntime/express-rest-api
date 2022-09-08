@@ -1,12 +1,14 @@
 require('dotenv').config();
-// const debug = require("debug")("app:startup")
+const debug = require("debug")("app:startup")
 const config = require('config');
 const middlewares = require('./models/middlewares');
 const express = require('express');
-const models = require('./models/models');
 const users = require("./routes/courses")
 const home = require("./routes/home")
 const app = express();
+
+app.set("view engine", "pug")
+// app.set("views", "./views")
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); //key=value1&key=value2
@@ -21,9 +23,9 @@ app.use("/", home)
 app.use("/api/courses", users)
 
 // Logging
-// debug(config.get('name'));
-// debug(config.get('mail.host'));
-// debug(config.get('mail.password'));
+debug(config.get('name'));
+debug(config.get('mail.host'));
+debug(config.get('mail.password'));
 
 
 
