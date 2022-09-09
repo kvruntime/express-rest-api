@@ -1,3 +1,5 @@
+// #region  Base Code
+
 require('dotenv').config();
 const debug = require("debug")("app:startup")
 const config = require('config');
@@ -27,9 +29,10 @@ debug(config.get('name'));
 debug(config.get('mail.host'));
 debug(config.get('mail.password'));
 
-
-
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Listening on port...${port}`);
 });
+
+// #endregion
+
