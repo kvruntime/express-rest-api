@@ -2,19 +2,23 @@
 
 require('dotenv').config();
 const debug = require("debug")("app:startup")
+const mongoose = require('mongoose');
 const config = require('config');
 const middlewares = require('./models/middlewares');
 const express = require('express');
-const users = require("./routes/courses")
 const home = require("./routes/home")
+const genres = require("./routes/genres")
+const customers = require("./routes/customers")
 const app = express();
+
+mongoose.connect(process.env.APP_DB_URL);
 
 app.set("view engine", "pug")
 // app.set("views", "./views")
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); //key=value1&key=value2
-// app.use(express.static('public'));
+app.use(express.static('public'));
 
 // Middlewares
 app.use(middlewares.logger);
@@ -22,7 +26,8 @@ app.use(middlewares.authenticater);
 
 // Routes
 app.use("/", home)
-app.use("/api/courses", users)
+app.use("/api/genres", genres)
+app.use("/api/customers", customers)
 
 // Logging
 debug(config.get('name'));

@@ -1,27 +1,28 @@
 //#region Mongoose
+require('dotenv').config();
+const mongoose = require('mongoose');
+const courseSchemas = require('./schemas/courseschemas');
+mongoose.connect(process.env.DB_URL);
 
 // 1. define a schema
 // 2. compile schema into model & store it into class Object
 // 3. use the created class to instanciate new object
 // 4. save object into database
 
-require('dotenv').config();
-const mongoose = require('mongoose');
-const courseSchemas = require('./schemas/courseschemas');
-mongoose.connect(process.env.DB_URL);
+async function createCourse(name, category, price, tags) {
+  const c = new courseSchemas.Course({
+    name: name,
+    category: category,
+    price: price,
+    tags: tags,
+  });
 
-// const c = new courseSchemas.Course({
-//   name: 'Angular Course',
-//   author: 'Mosh Hamedani',
-//   tags: ['node', 'backend', 'Angular'],
-// });
-
-// async function saveCourse(course) {
-//   const result = await course.save();
-//   console.log(result);
-// }
-
-// saveCourse(c);
+  try {
+    console.log(await c.save());
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 
 async function getCourses() {
   const courses = await courseSchemas.Course
@@ -52,10 +53,10 @@ async function updateCourse(id) {
 }
 
 async function deleteCourse(id) {
-const result = await courseSchemas.Course.findByIdAndRemove(id)
-console.log(result)
+  const result = await courseSchemas.Course.findByIdAndRemove(id);
+  console.log(result);
 }
-
+createCourse('ASPNET', 'web', 15, null);
 // updateCourse('6319dedaf2c4fed1340de1c6');
 // deleteCourse('6319dedaf2c4fed1340de1c6');
 // getCourses();
