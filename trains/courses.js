@@ -1,7 +1,7 @@
 const express = require("express")
 // const Joi = require("joi")
 const models = require('../models/models');
-const courseDtos = require('../dtos/coursesdtos');
+const courseDtos = require('../dtos');
 
 
 const router = express.Router()

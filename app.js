@@ -9,9 +9,11 @@ const express = require('express');
 const home = require("./routes/home")
 const genres = require("./routes/genres")
 const customers = require("./routes/customers")
+const movies = require("./routes/movies")
 const app = express();
-
+const Fawn = require("fawn")
 mongoose.connect(process.env.APP_DB_URL);
+Fawn.init(mongoose)
 
 app.set("view engine", "pug")
 // app.set("views", "./views")
@@ -28,6 +30,7 @@ app.use(middlewares.authenticater);
 app.use("/", home)
 app.use("/api/genres", genres)
 app.use("/api/customers", customers)
+app.use("/api/movies", movies)
 
 // Logging
 debug(config.get('name'));

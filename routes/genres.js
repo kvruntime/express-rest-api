@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const schemas = require('../schemas');
-const dtos = require('../dtos/coursesdtos');
+const dtos = require('../dtos');
 
 router.get('/', async (req, res) => {
   const _genres = await schemas.Genre.find().sort({ name: 1 });
