@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { moviesCreateDto } = require("../dtos");
-const { Movie } = require("../schemas");
+const { Movie, movieValidator } = require("../models/movie");
 
 router.get("/", async (req, res) => {
 	Movie.find()
@@ -11,7 +10,7 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", (req, res) => {
-	const { error, value } = moviesCreateDto.validate(req.body);
+	const { error, value } = movieValidator.validate(req.body);
 
 	if (error) return res.status(400).send(error.details);
 

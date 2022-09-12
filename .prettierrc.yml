@@ -1,3 +1,4 @@
 semi: true
 endOfLine: lf
 useTabs: true
+singleQuote: true

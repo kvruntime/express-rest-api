@@ -1,15 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const schemas = require('../schemas');
-const dtos = require('../dtos');
+const {Genre, genreValidator} = require("../models/genre")
 
 router.get('/', async (req, res) => {
-  const _genres = await schemas.Genre.find().sort({ name: 1 });
+  const _genres = await Genre.find().sort({ name: 1 });
   res.status(200).send(_genres);
 });
 
 router.get('/:id', async (req, res) => {
-  schemas.Genre.findByIdAndUpdate(req.params.id)
+  Genre.findByIdAndUpdate(req.params.id)
     .then((result) => {
       res.send(result);
     })
@@ -17,11 +16,11 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  const { error, value } = dtos.genreCreateDtod.validate(req.body);
+  const { error, value } = genreValidator.validate(req.body);
 
   if (error) return res.status(400).send(error.details);
 
-  const _genre = new schemas.Genre(value);
+  const _genre = new Genre(value);
 
   _genre
     .save()
@@ -35,17 +34,17 @@ router.post('/', (req, res) => {
 });
 
 router.put('/:id', (req, res) => {
-  const { error, value } = dtos.genreCreateDtod.validate(req.body);
+  const { error, value } = genreValidator.validate(req.body);
 
   if (error) return res.status(404).send(error.details);
 
-  schemas.Genre.findByIdAndUpdate(req.params.id, req.body, { new: true })
+  Genre.findByIdAndUpdate(req.params.id, req.body, { new: true })
     .then((result) => res.send(result))
     .catch((error) => res.status(404).send(error.message));
 });
 
 router.delete('/:id', (req, res) => {
-  schemas.Genre.findByIdAndRemove(req.params.id)
+  Genre.findByIdAndRemove(req.params.id)
     .then((result) => res.send(result))
     .catch((error) => res.status(404).send(error.message));
 });

@@ -1,8 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { Customer } = require("../schemas");
-const dtos = require("../dtos");
+const { Customer, customerValidator } = require("../models/customer");
 
 router.get("/", async (req, res) => {
 	Customer.find()
@@ -12,7 +11,7 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", (req, res) => {
-	const { error, value } = dtos.customerCreateDto.validate(req.body);
+	const { error, value } = customerValidator.validate(req.body);
 
 	if (error) return res.status(400).send(error.details);
 
