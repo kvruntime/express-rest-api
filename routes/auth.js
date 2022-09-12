@@ -4,6 +4,7 @@ const express = require("express");
 const Joi = require("joi");
 const { User } = require("../models/user");
 const router = express.Router();
+const bcrypt = require("bcrypt")
 
 const authValidator = Joi.object({
 	email: Joi.string().required().email(),
@@ -22,9 +23,7 @@ router.post("/", async (req, res) => {
 	if (!user) return res.status(400).send("Email not found!!!");
 
 	// TODO: use bycrypt here to check user's password validity
-	// Do some stuf to check password
-	// const isValid = await bycrypt.compare(value.password, user.password)
-	const isValid = value.password === user.password;
+	const isValid = await bcrypt.compare(value.password, user.password)
 	if (!isValid) return res.status(400).send("Invalid password!!!");
 
 	// After user validation

@@ -11,4 +11,4 @@ package used
     - express : build rest api with javacript
     - joi-objectid :  perform object validation on mongodb object _id
     - lodash (almost alternative to underscore)
-    - jsonwebtoken
+    - jsonwebtoken : authenticating user with header token

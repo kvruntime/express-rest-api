@@ -3,7 +3,6 @@ require('dotenv').config();
 const debug = require('debug')('app:startup');
 const mongoose = require('mongoose');
 const config = require('config');
-const middlewares = require('./models/middlewares');
 const express = require('express');
 const home = require('./routes/home');
 const genres = require('./routes/genres');
@@ -12,10 +11,16 @@ const rentals = require('./routes/rentals');
 const movies = require('./routes/movies');
 const users = require('./routes/users');
 const auth = require('./routes/auth');
+
 // const Fawn = require("fawn");
 
+if(!config.get("jwtPrivateKey")) {
+	console.log("FATAL ERROR: jwtPrivateKey not defined")
+	process.exit(1)
+}
+
 const app = express();
-mongoose.connect(process.env.APP_DB_URL).then(() => {
+mongoose.connect(process.env.VIDLY_DB_URL).then(() => {
 	console.log('applicaiton connected to database...!');
 });
 
@@ -29,8 +34,8 @@ app.use(express.urlencoded({ extended: true })); //key=value1&key=value2
 app.use(express.static('public'));
 
 // Middlewares
-app.use(middlewares.logger);
-app.use(middlewares.authenticater);
+// app.use(middlewares.logger);
+// app.use(middlewares.authenticater);
 
 // Routes
 app.use('/', home);

@@ -1,4 +1,5 @@
 const express = require("express");
+const auth = require("../middleware/auth");
 const router = express.Router();
 
 const { Customer, customerValidator } = require("../models/customer");
@@ -10,7 +11,7 @@ router.get("/", async (req, res) => {
 		.catch((error) => res.status(400).send(error.message));
 });
 
-router.post("/", (req, res) => {
+router.post("/", auth, (req, res) => {
 	const { error, value } = customerValidator.validate(req.body);
 
 	if (error) return res.status(400).send(error.details);

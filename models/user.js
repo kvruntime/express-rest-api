@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const Joi = require('joi');
+const jwt = require('jsonwebtoken');
+const config = require('config');
 
 const userValidator = Joi.object({
 	name: Joi.string().required(),
@@ -19,13 +21,15 @@ const userSchema = new mongoose.Schema({
 		type: String,
 		minlenght: 5,
 	},
+	idSuperUser: { type: Boolean, default: false },
 });
 
 userSchema.methods.genAuthToken = function () {
-	// TODO: use jwt to generate token bu token
-	// const token = jwt.sign({}, SERVER_TOKEN)
-  const token = `jwt-token ${this.email}`;
-	return token;
+	const token = jwt.sign(
+		{ _id: this._id, email: this.email, isSuperUser:this.isSuperUser },
+		config.get('jwtPrivateKey')
+	);
+	return token;	
 };
 
 module.exports.User = new mongoose.model('User', userSchema);
