@@ -21,15 +21,14 @@ const userSchema = new mongoose.Schema({
 		type: String,
 		minlenght: 5,
 	},
-	idSuperUser: { type: Boolean, default: false },
+	isSuperUser: { type: Boolean, default: false },
 });
 
 userSchema.methods.genAuthToken = function () {
-	const token = jwt.sign(
-		{ _id: this._id, email: this.email, isSuperUser:this.isSuperUser },
+	return jwt.sign(
+		{ _id: this._id, email: this.email, isSuperUser: this.isSuperUser },
 		config.get('jwtPrivateKey')
 	);
-	return token;	
 };
 
 module.exports.User = new mongoose.model('User', userSchema);

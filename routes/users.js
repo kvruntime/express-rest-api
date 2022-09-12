@@ -7,8 +7,8 @@ const auth = require('../middleware/auth');
 
 // NOTE: this route allow us to get information about the current logged user
 router.get('/me', auth, async (req, res) => {
-	const me = await User.findById( req.user._id).select("-password")
-	res.send(me)
+	const me = await User.findById(req.user._id).select('-password');
+	res.send(me);
 });
 
 router.post('/', async (req, res) => {
@@ -25,9 +25,8 @@ router.post('/', async (req, res) => {
 	user.password = await bcrypt.hash(user.password, await bcrypt.genSalt());
 	await user.save();
 
-	res.send(_.pick(user, ['name', 'email']));
 	const token = user.genAuthToken();
-	res.header('x-auth-token', token).send(user);
+	res.header('x-auth-token', token).send(_.pick(user, ['name', 'email']));
 });
 
 module.exports = router;
