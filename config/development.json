@@ -1,6 +1,4 @@
 {
-    "name":"express app dev",
-    "mail":{
-        "host":"dev-mail-host"
-    }
+    "jwtPrivateKey":"",
+    "dbUrl":""
 }

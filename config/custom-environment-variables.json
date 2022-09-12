@@ -1,8 +1,4 @@
 {
-    "name":"express app def",
-    "mail":{
-        "host":"dev-mail-host",
-        "password":"APP_PASSWORD"
-    },
-    "jwtPrivateKey":"VIDLY_JWT_KEY"
+    "jwtPrivateKey":"VIDLY_JWT_KEY",
+    "dbUrl":"VIDLY_DB_URL"
 }
